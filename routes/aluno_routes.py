@@ -1,4 +1,4 @@
-from fastapi import APIRouter, status
+from fastapi import APIRouter, status, HTTPException
 from schemas.aluno_schema import AlunoCreate, AlunoResponse
 from repositories.aluno_repository import AlunoRepository
 from services.aluno_service import AlunoService
@@ -11,4 +11,11 @@ router = APIRouter(prefix="/alunos", tags=["Alunos"])
 @router.post("/", response_model=AlunoResponse, status_code=201)
 def cadastrar_aluno(aluno: AlunoCreate):
     result = service.cadastrar(aluno.nome, aluno.idade, aluno.plano)
+    return result
+
+@router.get("/{id}", response_model=AlunoResponse, status_code=200)
+def buscar_aluno_id(id: int):
+    result = service.buscar_por_id(id)
+    if result is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="id não encontrado")
     return result

@@ -144,7 +144,7 @@ class AlunoRepository:
                 
     def buscar_por_id(self, id):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         cursor.execute(
             '''
