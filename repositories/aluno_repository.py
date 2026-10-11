@@ -30,7 +30,7 @@ class AlunoRepository:
         
     def listar(self):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         cursor.execute(
             '''
@@ -47,7 +47,7 @@ class AlunoRepository:
     
     def atualizar(self, id, idade, plano):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         try:
             cursor.execute(
@@ -84,7 +84,7 @@ class AlunoRepository:
                 (id,)
             )
             conexao.commit()
-            return True
+            return cursor.rowcount
         except Exception:
             conexao.rollback()
             raise
@@ -94,7 +94,7 @@ class AlunoRepository:
             
     def desativar(self, id):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         try:
             cursor.execute(
@@ -119,7 +119,7 @@ class AlunoRepository:
             
     def ativar(self, id):
             conexao = Conectar.conectar()
-            cursor = conexao.cursor()
+            cursor = conexao.cursor(row_factory=dict_row)
             
             try:
                 cursor.execute(
@@ -163,7 +163,7 @@ class AlunoRepository:
     
     def buscar_por_plano(self, plano):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         cursor.execute(
             '''
