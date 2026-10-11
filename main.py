@@ -14,7 +14,17 @@ aluno_service = AlunoService(repositoryAluno)
 treino_service = TreinoService(repositoryTreino)
 exercicio_service = ExercicioService(repositoryExercicio)
 
+#================================-MODELO-API-====================================================
+from fastapi import FastAPI, HTTPException
+from routes.aluno_routes import router as aluno_router
 
+app = FastAPI(title="sistema gerenciador de alunos de academia", version="0.2.0")
+
+app.include_router(aluno_router)
+
+
+
+#================================-MODELO-TERMINAL-====================================================
 def limpar_tela():
     print("\n" * 3)
 

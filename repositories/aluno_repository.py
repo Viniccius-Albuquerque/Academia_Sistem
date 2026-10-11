@@ -1,9 +1,10 @@
 from database.conexao import Conectar
+from psycopg.rows import dict_row
 
 class AlunoRepository:
     def inserir(self, nome, idade, plano):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         try:
             cursor.execute(
