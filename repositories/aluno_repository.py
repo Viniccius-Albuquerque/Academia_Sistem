@@ -1,4 +1,4 @@
-from conexao import Conectar
+from database.conexao import Conectar
 
 class AlunoRepository:
     def inserir(self, nome, idade, plano):

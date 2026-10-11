@@ -1,4 +1,4 @@
-from aluno import Aluno
+from modules.aluno import Aluno
 
 class AlunoService:
     def __init__(self, repository):

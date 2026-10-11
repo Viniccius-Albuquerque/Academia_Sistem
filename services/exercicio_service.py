@@ -1,4 +1,4 @@
-from exercicio import Exercicio
+from modules.exercicio import Exercicio
 
 class ExercicioService:
     def __init__(self, repository):

@@ -1,10 +1,10 @@
-from aluno_service import AlunoService
-from treino_service import TreinoService
-from exercicio_service import ExercicioService
+from services.aluno_service import AlunoService
+from services.treino_service import TreinoService
+from services.exercicio_service import ExercicioService
 
-from aluno_repository import AlunoRepository
-from treino_repository import TreinoRepository
-from exercicio_repository import ExercicioRepository
+from repositories.aluno_repository import AlunoRepository
+from repositories.treino_repository import TreinoRepository
+from repositories.exercicio_repository import ExercicioRepository
 
 repositoryAluno = AlunoRepository()
 repositoryTreino = TreinoRepository()

@@ -1,4 +1,4 @@
-from conexao import Conectar
+from database.conexao import Conectar
 
 class ExercicioRepository:
     def inserir(self, nome, series, repeticoes, id_treino):

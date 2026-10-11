@@ -1,4 +1,4 @@
-from treino import Treino
+from modules.treino import Treino
 
 class TreinoService:
     def __init__(self, repository):
