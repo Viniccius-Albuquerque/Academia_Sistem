@@ -45,3 +45,11 @@ class Treino:
         if nid_aluno <= 0:
             raise ValueError("id não pode ser menor ou igual a zero")
         self._id_aluno = nid_aluno
+        
+class TreinoCreate(Treino):
+    def __init__(self, nome, dia_semana, id_aluno):
+        super().__init__(None, nome, dia_semana, id_aluno)
+        
+class TreinoUpdate(Treino):
+    def __init__(self, nome, dia_semana, id_aluno):
+        super().__init__(None, nome, dia_semana, id_aluno)

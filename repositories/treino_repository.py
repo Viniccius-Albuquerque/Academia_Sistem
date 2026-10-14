@@ -1,9 +1,10 @@
 from database.conexao import Conectar
+from psycopg.rows import dict_row
 
 class TreinoRepository:
     def inserir(self, nome, dia_semana, id_aluno):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         try:
             cursor.execute(
@@ -29,7 +30,7 @@ class TreinoRepository:
             
     def listar_por_id(self, id):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         cursor.execute(
             '''
@@ -48,7 +49,7 @@ class TreinoRepository:
     
     def atualizar(self, dia_semana, nome, id_aluno):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         try:
             cursor.execute(

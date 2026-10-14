@@ -1,11 +1,11 @@
-from modules.treino import Treino
+from modules.treino import Treino, TreinoCreate, TreinoUpdate
 
 class TreinoService:
     def __init__(self, repository):
         self.repository = repository
         
     def cadastrar_treino(self, nome, dia_semana, id_aluno):
-        treino = Treino(None, nome, dia_semana, id_aluno)
+        treino = TreinoCreate(nome, dia_semana, id_aluno)
         
         treinos = self.repository.inserir(treino.nome, treino.dia_semana, treino.id_aluno)
         
@@ -17,7 +17,7 @@ class TreinoService:
         return treinos
 
     def atualizar(self, dia_semana, nome, id_aluno):
-        treino = Treino(None, nome, dia_semana, id_aluno)
+        treino = TreinoUpdate(nome, dia_semana, id_aluno)
         
         treinos = self.repository.atualizar(treino.dia_semana, treino.nome, treino.id_aluno)
         
