@@ -29,14 +29,26 @@ class AlunoService:
         return user
     
     def desativar(self, id):
-        user = self.repository.desativar(id)
+        verificacao = self.buscar_por_id(id)
+        if verificacao is None:
+            return {"mensagem": -1}
+        if verificacao["estado"] == "desativado":
+            return {"mensagem": 0}
         
-        return user
+        self.repository.desativar(id)
+        
+        return {"mensagem": 1}
     
     def ativar(self, id):
-            user = self.repository.ativar(id)
+        verificacao = self.buscar_por_id(id)
+        if verificacao is None:
+            return {"mensagem": -1}
+        if verificacao["estado"] == "ativo":
+            return {"mensagem": 0}
+        
+        self.repository.ativar(id)
             
-            return user
+        return {"mensagem": 1}
         
     def buscar_por_id(self, id):
         user = self.repository.buscar_por_id(id)
