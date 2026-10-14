@@ -1,11 +1,11 @@
-from modules.aluno import Aluno
+from modules.aluno import Aluno, AlunoCreate, AlunoUpdate
 
 class AlunoService:
     def __init__(self, repository):
         self.repository = repository
         
     def cadastrar(self, nome, idade, plano):
-        aluno = Aluno(None, nome, idade, plano, None)
+        aluno = AlunoCreate(nome, idade, plano)
         
         user = self.repository.inserir(aluno.nome, aluno.idade, aluno.plano)
         
@@ -17,7 +17,7 @@ class AlunoService:
         return users
     
     def atualizar(self, id, idade, plano):
-        aluno = Aluno(id, "None", idade, plano, None)
+        aluno = AlunoUpdate(id, idade, plano)
         
         user = self.repository.atualizar(id, aluno.idade, aluno.plano)
         

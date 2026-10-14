@@ -45,3 +45,10 @@ class Aluno:
             raise ValueError("Escreva corretamente seu plano")
         self._plano = novoPlano
 
+class AlunoCreate(Aluno):
+    def __init__(self, nome, idade, plano):
+        super().__init__(None, nome, idade, plano, None)
+        
+class AlunoUpdate(Aluno):
+    def __init__(self, id, idade, plano):
+        super().__init__(id, "none", idade, plano, None)
