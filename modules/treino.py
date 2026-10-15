@@ -53,3 +53,7 @@ class TreinoCreate(Treino):
 class TreinoUpdate(Treino):
     def __init__(self, nome, dia_semana, id_aluno):
         super().__init__(None, nome, dia_semana, id_aluno)
+        
+class TreinoDelete(Treino):
+    def __init__(self, dia_semana, id_aluno):
+        super().__init__(None, "none", dia_semana, id_aluno)

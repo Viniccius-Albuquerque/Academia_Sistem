@@ -1,4 +1,4 @@
-from modules.treino import Treino, TreinoCreate, TreinoUpdate
+from modules.treino import Treino, TreinoCreate, TreinoUpdate, TreinoDelete
 
 class TreinoService:
     def __init__(self, repository):
@@ -6,10 +6,15 @@ class TreinoService:
         
     def cadastrar_treino(self, nome, dia_semana, id_aluno):
         treino = TreinoCreate(nome, dia_semana, id_aluno)
-        
-        treinos = self.repository.inserir(treino.nome, treino.dia_semana, treino.id_aluno)
-        
-        return treinos
+        verificacao = self.buscar_por_id(id_aluno)
+        if verificacao == []:
+            return 0
+        else:
+            if treino.dia_semana in ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"]:
+                treinos = self.repository.inserir(treino.nome, treino.dia_semana, treino.id_aluno)
+                return treinos
+            else:
+                return -1
     
     def buscar_por_id(self, id):
         treinos = self.repository.listar_por_id(id)
@@ -18,12 +23,22 @@ class TreinoService:
 
     def atualizar(self, dia_semana, nome, id_aluno):
         treino = TreinoUpdate(nome, dia_semana, id_aluno)
-        
-        treinos = self.repository.atualizar(treino.dia_semana, treino.nome, treino.id_aluno)
-        
-        return treinos
+        verificacao = self.buscar_por_id(id_aluno)
+        if verificacao == []:
+            return 0
+        if treino.dia_semana in ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"]:
+            treinos = self.repository.atualizar(treino.dia_semana, treino.nome, treino.id_aluno)
+            return treinos
+        else:
+            return -1
     
     def deletar(self, dia_semana, id_aluno):
-        treino = self.repository.deletar(dia_semana, id_aluno)
-        
-        return treino
+        treino = TreinoDelete(dia_semana, id_aluno)
+        verificacao = self.buscar_por_id(id_aluno)
+        if verificacao == [] or verificacao == None:
+            return -1
+        if treino.dia_semana in ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"]:
+            treinos = self.repository.deletar(dia_semana, id_aluno)
+            return treinos
+        else:
+            return -2

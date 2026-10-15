@@ -85,7 +85,7 @@ class TreinoRepository:
                 (dia_semana, id_aluno)
             )
             conexao.commit()
-            return True
+            return cursor.rowcount
         except Exception:
             conexao.rollback()
             raise
