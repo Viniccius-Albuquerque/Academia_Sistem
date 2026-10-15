@@ -1,9 +1,10 @@
 from database.conexao import Conectar
+from psycopg.rows import dict_row
 
 class ExercicioRepository:
     def inserir(self, nome, series, repeticoes, id_treino):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         try:
             cursor.execute(
@@ -29,7 +30,7 @@ class ExercicioRepository:
             
     def listar_por_id(self, id_treino):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         cursor.execute(
             '''
@@ -48,7 +49,7 @@ class ExercicioRepository:
     
     def atualizar(self, nome, series, repeticoes, id):
         conexao = Conectar.conectar()
-        cursor = conexao.cursor()
+        cursor = conexao.cursor(row_factory=dict_row)
         
         try:
             cursor.execute(
@@ -84,7 +85,7 @@ class ExercicioRepository:
                 (id,)
             )
             conexao.commit()
-            return True
+            return cursor.rowcount
         except Exception:
             conexao.rollback()
             raise
