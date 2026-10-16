@@ -57,3 +57,11 @@ class Exercicio:
         if nrepeticoes <= 0:
             raise ValueError("id não pode ser menor ou igual a zero")
         self._repeticoes = nrepeticoes
+        
+class ExercicioCreate(Exercicio):
+    def __init__(self, nome, series, repeticoes, id_treino):
+        super().__init__(None, nome, series, repeticoes, id_treino)
+        
+class ExercicioUpdate(Exercicio):
+    def __init__(self, id, nome, series, repeticoes):
+        super().__init__(id, nome, series, repeticoes, 1)

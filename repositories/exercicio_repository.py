@@ -57,7 +57,7 @@ class ExercicioRepository:
                     UPDATE exercicio
                     SET nome = %s, series = %s, repeticoes = %s
                     WHERE id = %s
-                    RETURNING id, nome, series, repeticoes
+                    RETURNING id, nome, series, repeticoes, id_treino
                 ''',
                 (nome, series, repeticoes, id)
             )

@@ -18,11 +18,13 @@ exercicio_service = ExercicioService(repositoryExercicio)
 from fastapi import FastAPI, HTTPException
 from routes.aluno_routes import router as aluno_router
 from routes.treino_routes import router as treino_router
+from routes.exercicio_routes import router as exercicio_router
 
 app = FastAPI(title="sistema gerenciador de alunos de academia", version="0.2.0")
 
 app.include_router(aluno_router)
 app.include_router(treino_router)
+app.include_router(exercicio_router)
 
 
 
