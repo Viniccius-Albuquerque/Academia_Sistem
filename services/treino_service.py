@@ -70,9 +70,8 @@ class TreinoService:
 
         for item in treinos_do_dia:
             exercicios = self.exercicio_service.buscar_por_id(item["id"])
-        
-        if exercicios is not None:
-            for exercicio in exercicios:
-                self.exercicio_service.deletar(exercicio["id"])
+            if exercicios is not None:
+                for exercicio in exercicios:
+                    self.exercicio_service.deletar(exercicio["id"])
 
         return self.repository.deletar(treino.dia_semana, treino.id_aluno)
