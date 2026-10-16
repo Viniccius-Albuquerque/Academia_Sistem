@@ -10,7 +10,10 @@ router = APIRouter(prefix="/exercicio", tags=["Exercicio"])
 
 @router.post("/", response_model=ExercicioResponse, status_code=201)
 def criar_exercicio(exercicio: ExercicioCreate):
-    result = service.cadastrar_treino(exercicio.nome, exercicio.series, exercicio.repeticoes, exercicio.id_treino)
+    try:
+        result = service.cadastrar_treino(exercicio.nome, exercicio.series, exercicio.repeticoes, exercicio.id_treino)
+    except ValueError as erro:
+        raise HTTPException(status_code=status.HTTP_422_UNPROCESSABLE_CONTENT, detail=str(erro)) 
     if result == 0:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="id nao encontrado")
     return result
