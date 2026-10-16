@@ -31,19 +31,13 @@ class AlunoRepository:
     def listar(self):
         conexao = Conectar.conectar()
         cursor = conexao.cursor(row_factory=dict_row)
-        
-        cursor.execute(
-            '''
-                SELECT * FROM aluno
-            '''
-        )
-        
-        alunos = cursor.fetchall()
-        
-        cursor.close()
-        conexao.close()
-        
-        return alunos
+
+        try:
+            cursor.execute("SELECT * FROM aluno")
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conexao.close()
     
     def atualizar(self, id, idade, plano):
         conexao = Conectar.conectar()
@@ -118,64 +112,40 @@ class AlunoRepository:
             conexao.close()
             
     def ativar(self, id):
-            conexao = Conectar.conectar()
-            cursor = conexao.cursor(row_factory=dict_row)
-            
-            try:
-                cursor.execute(
-                    '''
-                        UPDATE aluno
-                        SET estado = 'ativo'
-                        WHERE id = %s
-                        RETURNING id, nome, idade, plano, estado
-                    ''',
-                    (id, )
-                )
-            
-                aluno = cursor.fetchone()
-                conexao.commit()
-                return aluno
-            except Exception:
-                conexao.rollback()
-                raise
-            finally:
-                cursor.close()
-                conexao.close()
+        conexao = Conectar.conectar()
+        cursor = conexao.cursor(row_factory=dict_row)
+
+        try:
+            cursor.execute("UPDATE aluno SET estado = 'ativo' WHERE id = %s RETURNING id, nome, idade, plano, estado", (id,))
+            aluno = cursor.fetchone()
+            conexao.commit()
+            return aluno
+        except Exception:
+            conexao.rollback()
+            raise
+        finally:
+            cursor.close()
+            conexao.close()
                 
+
     def buscar_por_id(self, id):
         conexao = Conectar.conectar()
         cursor = conexao.cursor(row_factory=dict_row)
-        
-        cursor.execute(
-            '''
-                SELECT * FROM aluno
-                WHERE id = %s
-            ''',
-            (id,)
-        )
-        
-        aluno = cursor.fetchone()
-        
-        cursor.close()
-        conexao.close()
-        
-        return aluno
+
+        try:
+            cursor.execute("SELECT * FROM aluno WHERE id = %s", (id,))
+            return cursor.fetchone()
+        finally:
+            cursor.close()
+            conexao.close()
     
     def buscar_por_plano(self, plano):
         conexao = Conectar.conectar()
         cursor = conexao.cursor(row_factory=dict_row)
-        
-        cursor.execute(
-            '''
-                SELECT * FROM aluno
-                WHERE plano = %s
-            ''',
-            (plano,)
-        )
-        
-        alunos = cursor.fetchall()
-        
-        cursor.close()
-        conexao.close()
-        
-        return alunos
+
+        try:
+            cursor.execute("SELECT * FROM aluno WHERE plano = %s", (plano,))
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conexao.close()

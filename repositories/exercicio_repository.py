@@ -26,26 +26,18 @@ class ExercicioRepository:
             raise
         finally:
             cursor.close()
-            conexao.close()
-            
+            conexao.close()  
+
     def listar_por_id(self, id_treino):
         conexao = Conectar.conectar()
         cursor = conexao.cursor(row_factory=dict_row)
-        
-        cursor.execute(
-            '''
-                SELECT * FROM exercicio
-                WHERE id_treino = %s
-            ''',
-            (id_treino,)
-        )
-        
-        exercicios = cursor.fetchall()
-        
-        cursor.close()
-        conexao.close()
-        
-        return exercicios
+
+        try:
+            cursor.execute("SELECT * FROM exercicio WHERE id_treino = %s", (id_treino,))
+            return cursor.fetchall()
+        finally:
+            cursor.close()
+            conexao.close()
     
     def atualizar(self, nome, series, repeticoes, id):
         conexao = Conectar.conectar()

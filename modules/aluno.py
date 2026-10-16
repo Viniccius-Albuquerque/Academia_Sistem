@@ -1,7 +1,7 @@
 class Aluno:
+    PLANOS_VALIDOS = ["basico", "intermediario", "pro"]
 
     def __init__(self, id_aluno, nome, idade, plano, estado):
-
         self.id_aluno = id_aluno
         self.nome = nome
         self.idade = idade
@@ -28,11 +28,11 @@ class Aluno:
 
     @idade.setter
     def idade(self, novaIdade):
-        if not isinstance(novaIdade, int):
-            raise ValueError("Escreva corretamente sua idade")
+        if isinstance(novaIdade, bool) or not isinstance(novaIdade, int):
+            raise ValueError("Idade deve ser um número inteiro")
 
         if novaIdade <= 0:
-            raise ValueError("Idade não pode ser menor ou igual a zero")
+            raise ValueError("Idade deve ser maior que zero")
         self._idade = novaIdade
 
     @property
@@ -43,12 +43,17 @@ class Aluno:
     def plano(self, novoPlano):
         if not isinstance(novoPlano, str):
             raise ValueError("Escreva corretamente seu plano")
+
+        novoPlano = novoPlano.strip().lower()
+        if novoPlano not in self.PLANOS_VALIDOS:
+            raise ValueError("Plano inválido. Use basico, intermediario ou pro")
+
         self._plano = novoPlano
 
 class AlunoCreate(Aluno):
     def __init__(self, nome, idade, plano):
         super().__init__(None, nome, idade, plano, None)
-        
+
 class AlunoUpdate(Aluno):
     def __init__(self, id, idade, plano):
-        super().__init__(id, "none", idade, plano, None)
+        super().__init__(id, "nome temporario", idade, plano, None)

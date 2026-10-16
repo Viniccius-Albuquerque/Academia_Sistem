@@ -56,6 +56,37 @@ def mostrar_resultado(resultado):
 
     else:
         print(resultado)
+        
+def executar_operacao(funcao, *args, sucesso, falhas=None):
+    if falhas is None:
+        falhas = {}
+
+    try:
+        resultado = funcao(*args)
+    except ValueError as erro:
+        print(f"\nErro de validação: {erro}")
+        return
+    except Exception as erro:
+        print(f"\nNão foi possível concluir a operação: {erro}")
+        return
+
+    if isinstance(resultado, dict) and "mensagem" in resultado:
+        codigo = resultado["mensagem"]
+    elif isinstance(resultado, int):
+        codigo = resultado
+    else:
+        codigo = None
+
+    if codigo in falhas:
+        print(f"\n{falhas[codigo]}")
+        return
+
+    if resultado is None:
+        print("\nNenhum registro encontrado.")
+        return
+
+    print(f"\n{sucesso}")
+    mostrar_resultado(resultado)
 
 def gerenciar_alunos():
 

@@ -48,29 +48,24 @@ class TreinoService:
 
     def deletar(self, dia_semana, id_aluno):
         treino = TreinoDelete(dia_semana, id_aluno)
-
-        aluno = self.aluno_repository.buscar_por_id(treino.id_aluno)
-        if aluno is None:
-            return -1
-
         dias_validos = ["segunda", "terca", "quarta", "quinta", "sexta", "sabado", "domingo"]
 
         if treino.dia_semana not in dias_validos:
             return -2
 
-        treinos = self.repository.listar_por_id(treino.id_aluno)
+        aluno = self.aluno_repository.buscar_por_id(treino.id_aluno)
+        if aluno is None:
+            return -1
 
-        treinos_do_dia = [
-            item for item in treinos
-            if item["dia_semana"] == treino.dia_semana
-        ]
+        treinos = self.repository.listar_por_id(treino.id_aluno)
+        treinos_do_dia = [item for item in treinos if item["dia_semana"] == treino.dia_semana]
 
         if not treinos_do_dia:
             return 0
 
         for item in treinos_do_dia:
             exercicios = self.exercicio_service.buscar_por_id(item["id"])
-            if exercicios is not None:
+            if exercicios:
                 for exercicio in exercicios:
                     self.exercicio_service.deletar(exercicio["id"])
 
