@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sistema de gerenciamento de alunos, treinos e exercícios de uma academia.">
+
+    <title>Academia | Sistema de Gestão</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+    <script src="js/api.js" defer></script>
+    <script src="js/alunos.js" defer></script>
+    <script src="js/treinos.js" defer></script>
+    <script src="js/exercicios.js" defer></script>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="logo">
+                <span class="logo-icone">A</span>
+                <div>
+                    <h1>Academia</h1>
+                    <p>Sistema de Gestão</p>
+                </div>
+            </div>
+
+            <nav class="menu">
+                <p class="menu-titulo">MENU PRINCIPAL</p>
+
+                <button type="button" class="menu-item ativo" data-secao="alunos">
+                    <span>01</span>
+                    Alunos
+                </button>
+                <button type="button" class="menu-item" data-secao="treinos">
+                    <span>02</span>
+                    Treinos
+                </button>
+                <button type="button" class="menu-item" data-secao="exercicios">
+                    <span>03</span>
+                    Exercícios
+                </button>
+            </nav>
+
+            <div class="sidebar-rodape">
+                <p>Sistema de gerenciamento</p>
+                <span>Projeto de academia</span>
+            </div>
+        </aside>
+
+        <main class="conteudo">
+            <header class="topo">
+                <div>
+                    <p class="subtitulo">GERENCIAMENTO</p>
+                    <h2 id="titulo-pagina">Alunos</h2>
+                </div>
+
+                <div class="status-api">
+                    <span class="status-ponto"></span>
+                    <span>API local</span>
+                </div>
+            </header>
+
+            <div id="mensagem" class="mensagem" role="status" aria-live="polite" hidden></div>
+
+            <section id="secao-alunos" class="secao ativa">
+                <div class="introducao">
+                    <div>
+                        <h3>Gerenciar alunos</h3>
+                        <p>Cadastre e acompanhe os alunos da academia.</p>
+                    </div>
+
+                    <button type="button" id="atualizar-lista-alunos" class="botao botao-secundario">
+                        Atualizar lista
+                    </button>
+                </div>
+
+                <div class="resumo">
+                    <article class="resumo-card">
+                        <p>Total de alunos</p>
+                        <strong id="total-alunos">—</strong>
+                        <span>Alunos cadastrados</span>
+                    </article>
+
+                    <article class="resumo-card">
+                        <p>Alunos ativos</p>
+                        <strong id="ativos-alunos">—</strong>
+                        <span>Com cadastro ativo</span>
+                    </article>
+
+                    <article class="resumo-card">
+                        <p>Alunos inativos</p>
+                        <strong id="inativos-alunos">—</strong>
+                        <span>Com cadastro inativo</span>
+                    </article>
+                </div>
+
+                <article class="painel">
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Novo aluno</h3>
+                            <p>Preencha os dados para cadastrar um aluno.</p>
+                        </div>
+                    </div>
+
+                    <form id="form-aluno">
+                        <div class="campos">
+                            <div class="campo">
+                                <label for="aluno-nome">Nome completo</label>
+                                <input
+                                    type="text"
+                                    id="aluno-nome"
+                                    name="nome"
+                                    placeholder="Ex.: João da Silva"
+                                    maxlength="100"
+                                    required
+                                >
+                            </div>
+
+                            <div class="campo">
+                                <label for="aluno-idade">Idade</label>
+                                <input
+                                    type="number"
+                                    id="aluno-idade"
+                                    name="idade"
+                                    placeholder="Ex.: 25"
+                                    min="1"
+                                    required
+                                >
+                            </div>
+
+                            <div class="campo">
+                                <label for="aluno-plano">Plano</label>
+                                <select id="aluno-plano" name="plano" required>
+                                    <option value="">Selecione um plano</option>
+                                    <option value="basico">Básico</option>
+                                    <option value="intermediario">Intermediário</option>
+                                    <option value="pro">Pro</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-acoes">
+                            <button type="reset" class="botao botao-secundario">
+                                Limpar
+                            </button>
+
+                            <button type="submit" class="botao botao-principal">
+                                Cadastrar aluno
+                            </button>
+                        </div>
+                    </form>
+                </article>
+
+                <article class="painel">
+
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Buscar aluno por ID</h3>
+                            <p>Consulte os dados de um aluno específico.</p>
+                        </div>
+                    </div>
+
+                    <form id="buscar-aluno-id" class="form-consulta">
+                        <div class="campo">
+                            <label for="consulta-aluno-id">ID do aluno</label>
+                            <input
+                                type="number"
+                                id="consulta-aluno-id"
+                                min="1"
+                                placeholder="Ex.: 1"
+                                required
+                            >
+                        </div>
+
+                        <button type="submit" class="botao botao-principal">
+                            Buscar aluno
+                        </button>
+                    </form>
+
+                    <div class="tabela-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Idade</th>
+                                    <th>Plano</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="resultado-aluno-id">
+                                <tr>
+                                    <td colspan="5" class="tabela-vazia">
+                                        Informe um ID para buscar um aluno.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </article>
+
+                <!-- Buscar alunos por plano -->
+                <article class="painel">
+
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Buscar alunos por plano</h3>
+                            <p>Consulte todos os alunos vinculados a um plano.</p>
+                        </div>
+                    </div>
+
+                    <form id="buscar-alunos-plano" class="form-consulta">
+                        <div class="campo">
+                            <label for="consulta-aluno-plano">Plano</label>
+
+                            <select id="consulta-aluno-plano" required>
+                                <option value="">Selecione um plano</option>
+                                <option value="basico">Básico</option>
+                                <option value="intermediario">Intermediário</option>
+                                <option value="pro">Pro</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="botao botao-principal">
+                            Buscar por plano
+                        </button>
+                    </form>
+
+                    <div class="tabela-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Idade</th>
+                                    <th>Plano</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="resultado-alunos-plano">
+                                <tr>
+                                    <td colspan="5" class="tabela-vazia">
+                                        Selecione um plano para consultar os alunos.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </article>
+
+                <article class="painel">
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Alunos cadastrados</h3>
+                            <p>Consulte e gerencie os registros existentes.</p>
+                        </div>
+                    </div>
+
+                    <div class="tabela-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Idade</th>
+                                    <th>Plano</th>
+                                    <th>Estado</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="lista-alunos">
+                                <tr>
+                                    <td colspan="6" class="tabela-vazia">
+                                        A lista será carregada pela API.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <section id="secao-treinos" class="secao">
+                <div class="introducao">
+                    <div>
+                        <h3>Gerenciar treinos</h3>
+                        <p>Cadastre e consulte os treinos dos alunos.</p>
+                    </div>
+                </div>
+
+                <article class="painel">
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Novo treino</h3>
+                            <p>Associe um treino a um aluno cadastrado.</p>
+                        </div>
+                    </div>
+
+                    <form id="form-treino">
+                        <div class="campos">
+                            <div class="campo">
+                                <label for="treino-nome">Nome do treino</label>
+                                <input
+                                    type="text"
+                                    id="treino-nome"
+                                    name="nome"
+                                    placeholder="Ex.: Treino de peito"
+                                    required
+                                >
+                            </div>
+
+                            <div class="campo">
+                                <label for="treino-dia">Dia da semana</label>
+                                <select id="treino-dia" name="dia_semana" required>
+                                    <option value="">Selecione o dia</option>
+                                    <option value="segunda">Segunda-feira</option>
+                                    <option value="terca">Terça-feira</option>
+                                    <option value="quarta">Quarta-feira</option>
+                                    <option value="quinta">Quinta-feira</option>
+                                    <option value="sexta">Sexta-feira</option>
+                                    <option value="sabado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                            </div>
+
+                            <div class="campo">
+                                <label for="treino-aluno">ID do aluno</label>
+                                <input
+                                    type="number"
+                                    id="treino-aluno"
+                                    name="id_aluno"
+                                    placeholder="Ex.: 1"
+                                    min="1"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-acoes">
+                            <button type="reset" class="botao botao-secundario">
+                                Limpar
+                            </button>
+
+                            <button type="submit" class="botao botao-principal">
+                                Cadastrar treino
+                            </button>
+                        </div>
+                    </form>
+                </article>
+
+                <article class="painel">
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Consultar treinos</h3>
+                            <p>Informe o ID do aluno para listar seus treinos.</p>
+                        </div>
+                    </div>
+
+                    <form id="buscar-treinos" class="form-consulta">
+                        <div class="campo">
+                            <label for="buscar-treino-aluno">ID do aluno</label>
+                            <input
+                                type="number"
+                                id="buscar-treino-aluno"
+                                min="1"
+                                placeholder="ID do aluno"
+                                required
+                            >
+                        </div>
+
+                        <button type="submit" class="botao botao-principal">
+                            Buscar treinos
+                        </button>
+                    </form>
+
+                    <div class="tabela-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nome</th>
+                                    <th>Dia</th>
+                                    <th>ID do aluno</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="lista-treinos">
+                                <tr>
+                                    <td colspan="4" class="tabela-vazia">
+                                        Busque um aluno para consultar os treinos.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="painel">
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Atualizar treino</h3>
+                            <p>Altere o nome do treino usando o aluno e o dia atual.</p>
+                        </div>
+                    </div>
+
+                    <form id="form-atualizar-treino">
+                        <div class="campos">
+                            <div class="campo">
+                                <label for="atualizar-treino-aluno">ID do aluno</label>
+                                <input
+                                    type="number"
+                                    id="atualizar-treino-aluno"
+                                    min="1"
+                                    required
+                                >
+                            </div>
+
+                            <div class="campo">
+                                <label for="atualizar-treino-dia">Dia atual do treino</label>
+                                <select id="atualizar-treino-dia" required>
+                                    <option value="">Selecione o dia</option>
+                                    <option value="segunda">Segunda-feira</option>
+                                    <option value="terca">Terça-feira</option>
+                                    <option value="quarta">Quarta-feira</option>
+                                    <option value="quinta">Quinta-feira</option>
+                                    <option value="sexta">Sexta-feira</option>
+                                    <option value="sabado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                            </div>
+
+                            <div class="campo">
+                                <label for="atualizar-treino-nome">Novo nome</label>
+                                <input
+                                    type="text"
+                                    id="atualizar-treino-nome"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-acoes">
+                            <button type="submit" class="botao botao-principal">
+                                Atualizar treino
+                            </button>
+                        </div>
+                    </form>
+                </article>
+
+                <article class="painel">
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Excluir treino</h3>
+                            <p>Informe o aluno e o dia do treino que deseja excluir.</p>
+                        </div>
+                    </div>
+
+                    <form id="form-excluir-treino">
+                        <div class="campos">
+                            <div class="campo">
+                                <label for="excluir-treino-aluno">ID do aluno</label>
+                                <input
+                                    type="number"
+                                    id="excluir-treino-aluno"
+                                    min="1"
+                                    required
+                                >
+                            </div>
+
+                            <div class="campo">
+                                <label for="excluir-treino-dia">Dia do treino</label>
+                                <select id="excluir-treino-dia" required>
+                                    <option value="">Selecione o dia</option>
+                                    <option value="segunda">Segunda-feira</option>
+                                    <option value="terca">Terça-feira</option>
+                                    <option value="quarta">Quarta-feira</option>
+                                    <option value="quinta">Quinta-feira</option>
+                                    <option value="sexta">Sexta-feira</option>
+                                    <option value="sabado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-acoes">
+                            <button type="submit" class="botao botao-perigo">
+                                Excluir treino
+                            </button>
+                        </div>
+                    </form>
+                </article>
+            </section>
+
+            <section id="secao-exercicios" class="secao">
+                <div class="introducao">
+                    <div>
+                        <h3>Gerenciar exercícios</h3>
+                        <p>Organize os exercícios de cada treino.</p>
+                    </div>
+                </div>
+
+                <article class="painel">
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Novo exercício</h3>
+                            <p>Associe um exercício a um treino existente.</p>
+                        </div>
+                    </div>
+
+                    <form id="form-exercicio">
+                        <div class="campos">
+                            <div class="campo">
+                                <label for="exercicio-nome">Nome do exercício</label>
+                                <input
+                                    type="text"
+                                    id="exercicio-nome"
+                                    name="nome"
+                                    placeholder="Ex.: Supino reto"
+                                    required
+                                >
+                            </div>
+
+                            <div class="campo">
+                                <label for="exercicio-series">Séries</label>
+                                <input
+                                    type="number"
+                                    id="exercicio-series"
+                                    name="series"
+                                    min="1"
+                                    placeholder="Ex.: 3"
+                                    required
+                                >
+                            </div>
+
+                            <div class="campo">
+                                <label for="exercicio-repeticoes">Repetições</label>
+                                <input
+                                    type="number"
+                                    id="exercicio-repeticoes"
+                                    name="repeticoes"
+                                    min="1"
+                                    placeholder="Ex.: 12"
+                                    required
+                                >
+                            </div>
+
+                            <div class="campo">
+                                <label for="exercicio-treino">ID do treino</label>
+                                <input
+                                    type="number"
+                                    id="exercicio-treino"
+                                    name="id_treino"
+                                    min="1"
+                                    placeholder="Ex.: 1"
+                                    required
+                                >
+                            </div>
+                        </div>
+
+                        <div class="form-acoes">
+                            <button type="reset" class="botao botao-secundario">
+                                Limpar
+                            </button>
+
+                            <button type="submit" class="botao botao-principal">
+                                Cadastrar exercício
+                            </button>
+                        </div>
+                    </form>
+                </article>
+
+                <article class="painel">
+                    <div class="painel-cabecalho">
+                        <div>
+                            <h3>Consultar exercícios</h3>
+                            <p>Informe o ID do treino para listar os exercícios associados.</p>
+                        </div>
+                    </div>
+
+                    <form id="buscar-exercicios" class="form-consulta">
+                        <div class="campo">
+                            <label for="buscar-exercicio-treino">ID do treino</label>
+                            <input
+                                type="number"
+                                id="buscar-exercicio-treino"
+                                min="1"
+                                placeholder="ID do treino"
+                                required
+                            >
+                        </div>
+
+                        <button type="submit" class="botao botao-principal">
+                            Buscar exercícios
+                        </button>
+                    </form>
+
+                    <div class="tabela-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Exercício</th>
+                                    <th>Séries</th>
+                                    <th>Repetições</th>
+                                    <th>ID do treino</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="lista-exercicios">
+                                <tr>
+                                    <td colspan="6" class="tabela-vazia">
+                                        Busque um treino para consultar os exercícios.
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <footer class="rodape">
+                <p>Sistema de Gestão da Academia</p>
+                <span>Interface conectada à API local</span>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>

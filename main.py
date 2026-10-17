@@ -20,7 +20,20 @@ from routes.aluno_routes import router as aluno_router
 from routes.treino_routes import router as treino_router
 from routes.exercicio_routes import router as exercicio_router
 
+from fastapi.middleware.cors import CORSMiddleware
+
 app = FastAPI(title="sistema gerenciador de alunos de academia", version="0.2.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://127.0.0.1:5500",
+        "http://localhost:5500"
+    ],
+    allow_credentials=False,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 app.include_router(aluno_router)
 app.include_router(treino_router)
