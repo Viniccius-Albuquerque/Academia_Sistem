@@ -1,8 +1,11 @@
 from modules.aluno import Aluno, AlunoCreate, AlunoUpdate
+from services.treino_service import TreinoService
+from repositories.treino_repository import TreinoRepository
 
 class AlunoService:
-    def __init__(self, repository):
+    def __init__(self, repository, treino_service=None):
         self.repository = repository
+        self.treino_service = (treino_service if treino_service is not None else TreinoService(TreinoRepository()))
         
     def cadastrar(self, nome, idade, plano):
         aluno = AlunoCreate(nome, idade, plano)
@@ -24,6 +27,10 @@ class AlunoService:
         return user
     
     def deletar(self, id):
+        verificacao = self.treino_service.buscar_por_id(id)
+        for treino in verificacao:
+            self.treino_service.deletar(treino["dia_semana"], id)
+        
         user = self.repository.deletar(id)
         
         return user
