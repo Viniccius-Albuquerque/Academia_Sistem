@@ -1,4 +1,4 @@
-const API_URL = "https://academia-sistem.onrender.com/";
+const API_URL = "https://academia-sistem.onrender.com";
 
 async function requisicao(caminho, opcoes = {}) {
     const configuracao = {
